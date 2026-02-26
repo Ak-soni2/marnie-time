@@ -19,3 +19,9 @@ Because the assignment mandated simplicity, certain edge cases like concurrent l
 If expanded for a fully scalable microservice:
 1. Extract the `cb` aggregation into materialized views since maritime computations rely heavily on multi-phase aggregations across enormous fleet sizes.
 2. Introduce a pure `Application/Use-Case` CQRS layer (Command/Query Responsibility Segregation) between the HTTP entry point and the Domain services for advanced auditing context.
+
+## AI & Tools Used
+To rapidly develop, build, and thoroughly understand this project, several AI-driven tools were leveraged:
+- **Lovable**: Used extensively for scaffolding and generating the frontend architecture, components, and UI structure.
+- **Antigravity**: Served as the primary code editor and AI agent to iterate, fix bugs, and refactor code directly inside the development environment.
+- **ChatGPT & Gemini**: Utilized strategically to brainstorm implementations, deeply understand the FuelEU Maritime domain logic, and figure out complex requirements.

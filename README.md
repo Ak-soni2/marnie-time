@@ -12,6 +12,13 @@ A full-stack implementation modeling core compliance logic for the FuelEU Mariti
 ### 1. Database Configuration
 Ensure you have PostgreSQL installed. You can set up a local PG connection via environment variables in `backend/.env`.
 
+**Using Docker (Recommended):**
+If you have Docker installed, you can simply spin up the database via the provided `docker-compose.yml` file in the root directory:
+```bash
+docker-compose up -d
+```
+This will start a Postgres container populated with the correct credentials and database name `fueleu` on port `5432`.
+
 ### 2. Backend Bootstrapping
 Navigate to the `backend/` directory:
 ```bash
