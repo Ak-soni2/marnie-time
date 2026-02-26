@@ -1,22 +1,28 @@
-# FuelEU Maritime Compliance Platform - AI Agent Workflow
+# AI Agent Workflow Log
 
-## Agent Used
-Google Deepmind Advanced Agentic Coding Assistant (Antigravity).
+## Agents Used
+- **Lovable**: Scaffolding and generating frontend architecture, components, and initial UI structure.
+- **Antigravity**: Primary code editor, agentic iterations, bug fixing, and refactoring directly inside the development environment.
+- **ChatGPT & Gemini**: Brainstorming domain logic (FuelEU Maritime regulation) and understanding complex requirements architecture.
 
-## Workflow Execution Summary
-The agent adopted a highly structured approach to complete the Full-Stack assignment under the requested "Hexagonal Architecture" (Ports & Adapters) paradigm.
+## Prompts & Outputs
+- **Example 1: Backend Data Access Layer**
+  - *Prompt Action*: "The codebase has partially implemented Hexagonal Domain Services. Implement the missing data access layers for Postgres."
+  - *Output Snippet*: The agent accurately generated adapters like `PostgresRouteRepository` and `PostgresComplianceRepository` implementing the `core/ports` interfaces securely.
+- **Example 2: Frontend API Integration Refinement**
+  - *Prompt Action*: "Connect the frontend React components to the backend API instead of using mock data."
+  - *Output Refinement*: The agent initially replaced static mock data with standard fetch calls. It was subsequently refined to use a tailored `@tanstack/react-query` setup in `api.ts` to achieve dynamic server state synchronization with caching and auto-invalidation features across `RoutesPage`, `ComparePage`, `BankingPage`, and `PoolingPage`.
 
-1. **Analysis and Planning**: The initial prompt established the objective to build a FuelEU compliance dashboard and a full backend API to interface with a PostgreSQL database. The agent outlined a distinct checklist using `task.md` to cleanly divide backend data handling, frontend API fetching, and final validation.
-2. **Backend Architecture Verification**: The codebase had partially implemented Hexagonal Domain Services. The agent recognized the architecture and subsequently generated the missing data access layers: `PostgresRouteRepository`, `PostgresComplianceRepository`, `PostgresBankRepository`, and `PostgresPoolRepository`, strictly adhering to the respective Interface Ports defined in `core/ports`.
-3. **API Routing implementation**: Connected the existing Hexagonal instances via Express HTTP adapters inside `routes.ts`, completing endpoints for:
-   - `/routes`, `/routes/comparison`, `/routes/:id/baseline`
-   - `/compliance/cb`, `/compliance/adjusted-cb`
-   - `/banking/bank`, `/banking/apply`, `/banking/records`
-   - `/pools`
-4. **Integration Debugging**: Discovered ES Module compatibility issues with `jest`. Fixed the TypeScript imports appending `.js` where required by NodeNext module resolution, and rewrote the package `test` script using `--experimental-vm-modules` for raw node ESM behavior, letting tests pass successfully.
-5. **Frontend API Linking**: Replaced the static placeholder UI components using mock data with a tailored fetch-based React Query setup in `api.ts`, achieving accurate dynamic server state synchronization. All tabs (`RoutesPage`, `ComparePage`, `BankingPage`, `PoolingPage`) correctly execute API logic and invalidate UI state.
+## Validation / Corrections
+- **Testing and Verification**: Validated the backend logic directly using `npm test`. The agent proactively identified issues without needing explicit user oversight for standard unit tests.
+- **ES Module Interop Correction**: During validation, Jest threw ES Module compatibility errors under `type: "module"`. The AI was instructed to resolve this. It successfully corrected TypeScript imports (appending `.js`) to satisfy NodeNext resolution and updated the test script flags to use `--experimental-vm-modules`.
 
-## Efficiency and Iteration
-- The agent used efficient `replace_file_content` block-level editing instead of overwriting files blindly.
-- System tools directly tested and verified backend logic (`npm test`), identifying ESM bugs proactively without user oversight.
-- The use of dynamic `React Query` hooks on the frontend solved complex asynchronous state updates rapidly.
+## Observations
+- **Where agent saved time**: The combination of Lovable for rapid UI creation and Antigravity for writing the boilerplate Hexagonal ports/adapters heavily accelerated the initial development phase. Efficient block-level editing tools (`replace_file_content`) prevented wiping out surrounding custom code.
+- **Where it failed or hallucinated**: The agent initially struggled with the nuances of CommonJS vs. ESM interop when using Jest with TypeScript under the NodeNext module resolution, requiring manual observation and prompt correction to fix the test suite runner commands.
+- **How tools were combined effectively**: Used ChatGPT/Gemini to define the complex domain constraints of the FuelEU maritime rules on an abstract level, then fed those constraints into Antigravity to write the concrete TypeScript domain services.
+
+## Best Practices Followed
+- **Structured Task Breakdown**: Leveraged a `task.md` checklist artifact specifically to cleanly divide backend data handling, frontend API fetching, and final validation steps.
+- **Iterative Refactoring**: Transitioned gradually from mock data (in initial UI scaffolding) to functional API layers using systematic tool calls.
+- **Clean Architecture Adherence**: Guided the generative AI strictly to maintain Hexagonal separation of concerns (Ports & Adapters) minimizing framework side-effect bleeding into the domain code.
