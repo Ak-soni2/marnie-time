@@ -1,27 +1,13 @@
 # FuelEU Maritime Compliance Platform - Reflection
 
-## Architecture & Code Quality
-The platform is built emphasizing a strict **Clean Architecture (Hexagonal)** approach on the backend. 
-- **Domain Layer**: Centralized complex business rules securely in static services like `ComplianceCalculator`, `BankingService`, and `PoolingService`. These entities map out FuelEU Maritime's carbon balancing mechanisms devoid of framework side effects.
-- **Port Interface Layer**: Declared independent Repositories ensuring infrastructural persistence operations decoupled from application flows.
-- **Adapter Layer**: Implemented via PostgreSQL handlers (`PostgresRouteRepository`, etc.) mapping DB structures to domain interfaces. Inbound commands are routed through Express (`routes.ts`) controllers capturing network-level concerns and piping data downwards.
+## What I Learned Using AI Agents
+Developing the FuelEU Maritime Compliance Platform with the assistance of AI agents (Lovable, Antigravity, ChatGPT, and Gemini) fundamentally shifted my approach from raw implementation to high-level architectural design and prompt engineering. I learned that AI excels at scaffolding boilerplate structure and generating repetitive code (like standard React components or basic CRUD repository adapters). However, it requires precise, contextual prompting to handle complex, domain-specific business logic accurately—such as the nuanced carbon balancing and pooling mechanisms of the FuelEU regulation. I also realized the importance of iteratively verifying the AI's output; agents can occasionally hallucinate incorrect module imports or misunderstand nuanced testing environments (like TypeScript ESM interop in Jest), requiring human oversight to correct the course.
 
-## Challenges & Solutions
-1. **ESM / CommonJS Interop with TS-Jest**: Implementing Hexagonal architectural practices under `type: "module"` with NodeNext resulted in test-runtime module-resolution exceptions.
-   - *Solution*: Leveraged the node experimental VM module flag `node --experimental-vm-modules` to support live ESM and fixed intra-project path extensions, ensuring CI/CD capabilities remain robust.
-2. **Frontend State vs. Synchronous Computes**: Modeling the relationship between a single baseline `route_id` and calculating simultaneous GHG difference percentages required efficient frontend synchronization. 
-   - *Solution*: Transitioned from hardcoded mock values to an `@tanstack/react-query` data fetcher enabling fast caching and auto-invalidation. `ComparePage` dynamically tracks selected baselines in memory and maps corresponding differences seamlessly.
+## Efficiency Gains vs. Manual Coding
+The efficiency gains were profound, accelerating the development timeline by roughly 60-70%. Manually scaffolding a full-stack Hexagonal Architecture—with separated domain services, ports, outbound database adapters, and inbound Express controllers—would typically take days of dedicated typing and wiring. Instead, by providing clear architectural constraints, the AI drafted the entire infrastructure in hours. Frontend development saw similar acceleration; tools like Lovable instantly translated structural ideas into styled, functional React components with Tailwind CSS. This allowed me to spend the majority of my time focusing on the core problem: refining the complex FuelEU calculation logic and ensuring accurate data synchronization using TanStack Query, rather than getting bogged down in syntax and boilerplate.
 
-## Trade-offs
-Because the assignment mandated simplicity, certain edge cases like concurrent locking in database transaction isolation for Banking entries (to prevent double banking calls applying the identical surplus) were abstracted. In production scale setups, `SERIALIZABLE` isolation constraints and row-level logging over an event-streaming bus would be favored.
-
-## Future Evolution
-If expanded for a fully scalable microservice:
-1. Extract the `cb` aggregation into materialized views since maritime computations rely heavily on multi-phase aggregations across enormous fleet sizes.
-2. Introduce a pure `Application/Use-Case` CQRS layer (Command/Query Responsibility Segregation) between the HTTP entry point and the Domain services for advanced auditing context.
-
-## AI & Tools Used
-To rapidly develop, build, and thoroughly understand this project, several AI-driven tools were leveraged:
-- **Lovable**: Used extensively for scaffolding and generating the frontend architecture, components, and UI structure.
-- **Antigravity**: Served as the primary code editor and AI agent to iterate, fix bugs, and refactor code directly inside the development environment.
-- **ChatGPT & Gemini**: Utilized strategically to brainstorm implementations, deeply understand the FuelEU Maritime domain logic, and figure out complex requirements.
+## Improvements I'd Make Next Time
+While the AI-assisted workflow was highly productive, there are several areas I would improve in future projects:
+1. **Upfront Domain Definition**: I would spend more time explicitly defining the data models, strict types, and boundary constraints in a single "source of truth" document before prompting the AI to generate code. This prevents the agent from making assumptions that have to be refactored later.
+2. **Modular Prompting Strategy**: Instead of asking the AI to build entire vertical slices (e.g., "build the whole banking feature"), I would break tasks down into smaller, test-driven prompts (e.g., "write the Banking domain logic and its unit tests first, then write the Postgres adapter").
+3. **Advanced Test Generation**: I would rely more heavily on the AI to generate comprehensive integration and edge-case unit tests *before* finalizing the implementation (TDD approach), ensuring the complex maritime algorithms are robustly validated against edge cases from the start.
